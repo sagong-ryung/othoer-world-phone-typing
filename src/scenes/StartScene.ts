@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import PressSpaceText from "../components/PressSpaceText";
 
 export default class StartScene extends Phaser.Scene {
     constructor() {
@@ -8,28 +9,23 @@ export default class StartScene extends Phaser.Scene {
     create() {
         // タイトルテキスト
         this.add
-            .text(300, 200, "異世界からの電話", {
+            .text(400, 250, "異世界からの電話", {
                 fontSize: "48px",
                 color: "#FFF",
                 fontFamily: "Arial",
             })
             .setOrigin(0.5);
-
-        // 「始める」ボタン
-        const startButton = this.add
-            .text(400, 350, "始める", {
-                fontSize: "32px",
-                color: "#FFF",
-                fontFamily: "Arial",
-                backgroundColor: "#000",
-                padding: { x: 20, y: 10 },
-            })
-            .setOrigin(0.5)
-            .setInteractive();
+        
+        new PressSpaceText(this, 400, 500);
 
         // ボタンをクリックした時のイベント
-        startButton.on("pointerdown", () => {
-            this.scene.start("StartChapter1");
+        // this.input?.keyboard?.on("keydown-SPACE", () => {
+        //     this.scene.start("Chapter1Scene0");
+        // });
+
+        // テスト用
+        this.input?.keyboard?.on("keydown-SPACE", () => {
+            this.scene.start("Chapter1Scene3"); // 次のシーンに進む
         });
     }
 }
