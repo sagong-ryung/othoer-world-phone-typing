@@ -15,7 +15,7 @@ export default class StartScene extends Phaser.Scene {
                 fontFamily: "Arial",
             })
             .setOrigin(0.5);
-        
+
         new PressSpaceText(this, 400, 500);
 
         // ボタンをクリックした時のイベント
@@ -25,7 +25,7 @@ export default class StartScene extends Phaser.Scene {
 
         // テスト用
         this.input?.keyboard?.on("keydown-SPACE", () => {
-            this.scene.start("Chapter1Scene3"); // 次のシーンに進む
+            this.scene.start("Chapter1Scene11");
         });
     }
 }

@@ -1,6 +1,6 @@
-import { Typewriter } from "./Typewriter"; // Typewriter クラスのインポート
+import Typewriter from "./Typewriter"; // Typewriter クラスのインポート
 
-export class DialogueManager {
+export default class DialogueManager {
     private typewriter: Typewriter;
     private dialogues: string[];
     private dialogueIndex: number = 0;
@@ -12,14 +12,16 @@ export class DialogueManager {
     constructor(
         scene: Phaser.Scene,
         dialogues: string[],
-        typingSpeed: number = 50,  // デフォルトのタイプ速度
-        waitTime: number = 1500   // セリフの後の待機時間
+        typingSpeed: number = 40, // デフォルトのタイプ速度
+        waitTime: number = 1500 // セリフの後の待機時間
     ) {
         this.scene = scene;
         this.dialogues = dialogues;
         this.typingSpeed = typingSpeed;
         this.waitTime = waitTime;
         this.typewriter = new Typewriter(scene, 50, 100, "Arial", "24px");
+
+        this.showNextDialogue(); // 最初のセリフを表示
     }
 
     // セリフを次々に表示する関数
@@ -34,7 +36,8 @@ export class DialogueManager {
         this.typewriter.start(this.typingSpeed);
 
         // セリフが終わったら一定時間待って次のセリフへ
-        const totalDelay = currentText.length * this.typingSpeed + this.waitTime;
+        const totalDelay =
+            currentText.length * this.typingSpeed + this.waitTime;
         this.scene.time.delayedCall(totalDelay, () => {
             this.dialogueIndex++;
             this.showNextDialogue();
@@ -43,7 +46,7 @@ export class DialogueManager {
 
     // スペースキーでスキップ
     public skipDialogue() {
-        this.dialogueIndex++
+        this.dialogueIndex++;
         this.showNextDialogue(); // 次のセリフへ進む
     }
 

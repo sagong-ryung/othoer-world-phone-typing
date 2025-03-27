@@ -1,4 +1,4 @@
-export class Typewriter {
+export default class Typewriter {
     private text?: string;
     private index: number;
     private textObject: Phaser.GameObjects.Text;
@@ -15,7 +15,7 @@ export class Typewriter {
         this.textObject = scene.add.text(x, y, "", {
             fontFamily: fontFamily,
             fontSize: fontSize,
-            wordWrap: { width: 300 },
+            wordWrap: { width: 700 },
         });
         this.index = 0;
     }
@@ -39,7 +39,9 @@ export class Typewriter {
             loop: true,
             callback: () => {
                 if (this.index < this.text!.length) {
-                    this.textObject.setText(this.textObject.text + this.text![this.index]);
+                    this.textObject.setText(
+                        this.textObject.text + this.text![this.index]
+                    );
                     this.index++;
                 } else {
                     this.timer?.destroy();

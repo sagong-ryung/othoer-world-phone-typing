@@ -1,7 +1,5 @@
 import Phaser from "phaser";
 import TypingChallenge from "../../utils/TypingChallenge";
-// import TypingChallengeManager from "../../utils/TypingChallengeManager"
-
 
 export default class Scene3 extends Phaser.Scene {
     private typingChallenge?: TypingChallenge;
@@ -20,15 +18,22 @@ export default class Scene3 extends Phaser.Scene {
         const BG_Y = this.scale.height / 2;
         this.add.image(BG_X, BG_Y, "truck");
 
-        // const words = ["hello", "world", "Phaser"]
-        const challengeTime = 5
-        this.typingChallenge = new TypingChallenge(this, "hello", challengeTime);
+        const challengeTime = 5;
+        this.typingChallenge = new TypingChallenge(
+            this,
+            BG_X,
+            400,
+            "立ち上がる",
+            "tachiagaru",
+            32,
+            challengeTime
+        );
         this.typingChallenge.startTyping().then((success) => {
             if (success) {
                 this.scene.start("Chapter1Scene4");
             } else {
                 this.scene.start("GameOverScene");
             }
-        })
+        });
     }
 }

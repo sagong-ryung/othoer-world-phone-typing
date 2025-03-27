@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { DialogueManager } from "../../utils/DialogueManager";
+import DialogueManager from "../../utils/DialogueManager";
 
 export default class Scene1 extends Phaser.Scene {
     private dialogueManager?: DialogueManager;
@@ -22,12 +22,10 @@ export default class Scene1 extends Phaser.Scene {
         const dialogues: string[] = [
             "主人公: 「やっとおつかい終わったな、\n早く帰らないとお母さんが心配する。」",
             "主人公: 「あれ、何か忘れてる気がする。。。\nやべっ、ほうれん草買い忘れてる！急いで戻らなきゃ」",
-            "スーパーに急いで戻る"
+            "スーパーに急いで戻る",
         ];
-        this.dialogueManager = new DialogueManager(this, dialogues)
-        this.dialogueManager.showNextDialogue();
+        this.dialogueManager = new DialogueManager(this, dialogues);
 
-        
         this.input.keyboard?.on("keydown-SPACE", () => {
             if (this.dialogueManager?.getIsLastDialogue()) {
                 // 最後のセリフ後にスペースを押すと次のシーンに進む

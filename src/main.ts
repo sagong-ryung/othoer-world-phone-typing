@@ -7,11 +7,7 @@ const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    scene: [
-        StartScene, 
-        GameOverScene,
-        ...Object.values(Chapter1),
-    ],
+    scene: [StartScene, GameOverScene, ...Object.values(Chapter1)],
 };
 
 new Phaser.Game(config);
