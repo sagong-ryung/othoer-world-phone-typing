@@ -8,6 +8,7 @@ export default class DialogueManager {
     private waitTime: number;
     private scene: Phaser.Scene;
     private isLastDialogue: boolean = false; // 最後のセリフかどうかのフラグ
+    public onDialogueChange?: (index: number) => void; // コールバック関数
 
     constructor(
         scene: Phaser.Scene,
@@ -34,6 +35,11 @@ export default class DialogueManager {
         const currentText = this.dialogues[this.dialogueIndex];
         this.typewriter.init(currentText);
         this.typewriter.start(this.typingSpeed);
+
+        // ダイアログが進んだことを通知
+        if (this.onDialogueChange) {
+            this.onDialogueChange(this.dialogueIndex);
+        }
 
         // セリフが終わったら一定時間待って次のセリフへ
         const totalDelay =

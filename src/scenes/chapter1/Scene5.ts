@@ -1,9 +1,8 @@
 import Phaser from "phaser";
 import DialogueManager from "../../utils/DialogueManager";
+import EffectManager from "../../utils/EffectManager";
 
 export default class Scene5 extends Phaser.Scene {
-    private dialogueManager?: DialogueManager;
-
     constructor() {
         super({ key: "Chapter1Scene5" });
     }
@@ -21,7 +20,7 @@ export default class Scene5 extends Phaser.Scene {
         const dialogues: string[] = [
             "「やばい、間に合わない…！\n死ぬのか…！？ こんなとこで！」",
         ];
-        this.dialogueManager = new DialogueManager(this, dialogues, 20);
+        const dialogueManager = new DialogueManager(this, dialogues, 20);
 
         // ズームアニメーションを追加
         this.tweens.add({
@@ -32,31 +31,17 @@ export default class Scene5 extends Phaser.Scene {
             ease: "Power2", // イージング関数
             onComplete: () => {
                 // ズームが終わったら白いフラッシュアウトを開始
-                this.flashOut();
+                EffectManager.flashOut(this);
             },
         });
 
         this.input.keyboard?.on("keydown-SPACE", () => {
-            if (this.dialogueManager?.getIsLastDialogue()) {
+            if (dialogueManager?.getIsLastDialogue()) {
                 // 最後のセリフ後にスペースを押すと次のシーンに進む
                 this.scene.start("Chapter1Scene6"); // 次のシーンへ遷移
             } else {
-                this.dialogueManager?.skipDialogue(); // まだセリフが表示中ならスキップ
+                dialogueManager?.skipDialogue(); // まだセリフが表示中ならスキップ
             }
-        });
-    }
-
-    flashOut() {
-        // 白い矩形を画面全体に追加（フラッシュ効果）
-        const flash = this.add.graphics();
-        flash.fillStyle(0xffffff, 1); // 白色で塗りつぶす
-        flash.fillRect(0, 0, this.scale.width, this.scale.height);
-
-        // フラッシュがそのまま続くようにアニメーションで透明度を設定
-        this.tweens.add({
-            targets: flash,
-            alpha: 1, // 光ったままにする
-            duration: 1000, // フラッシュの保持時間
         });
     }
 }

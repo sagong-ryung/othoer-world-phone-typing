@@ -1,9 +1,8 @@
 import Phaser from "phaser";
 import DialogueManager from "../../utils/DialogueManager";
+import EffectManager from "../../utils/EffectManager";
 
 export default class Scene6 extends Phaser.Scene {
-    private dialogueManager?: DialogueManager;
-
     constructor() {
         super({ key: "Chapter1Scene6" });
     }
@@ -19,16 +18,16 @@ export default class Scene6 extends Phaser.Scene {
         const BG_Y = this.scale.height / 2;
         const bgImage = this.add.image(BG_X, BG_Y, "forest");
 
-        this.blackIn();
+        EffectManager.blackIn(this);
 
         // ダイアログの内容
         const dialogues: string[] = [
             "主人公:「うっ、い、痛くな…い…？どうして生きてるんだ…？」",
             "(目を開けると、周りはうす暗い森。静寂が支配している)",
-            "主人公: 「ここは……どこだ？ 夢……？\nそれとももう死んでるとか…うす暗くて、気味悪いな……」\n(周囲の静けさが不気味で、心臓の鼓動が耳に響く)",
+            "主人公: 「ここは……どこだ？ 夢……？\nそれとももう死んでるとか…うす暗くて気味悪いな……」\n(周囲の静けさが不気味で、心臓の鼓動が耳に響く)",
             "主人公: 「誰か…誰かいるのか？ こんなところで一人なんて、、」",
         ];
-        this.dialogueManager = new DialogueManager(this, dialogues, 20);
+        const dialogueManager = new DialogueManager(this, dialogues, 40);
 
         // ズームアニメーションを追加
         this.tweens.add({
@@ -42,31 +41,11 @@ export default class Scene6 extends Phaser.Scene {
         });
 
         this.input.keyboard?.on("keydown-SPACE", () => {
-            if (this.dialogueManager?.getIsLastDialogue()) {
+            if (dialogueManager?.getIsLastDialogue()) {
                 this.scene.start("Chapter1Scene7");
             } else {
-                this.dialogueManager?.skipDialogue();
+                dialogueManager?.skipDialogue();
             }
-        });
-    }
-
-    // 黒いオーバーレイを使ってフェードイン効果を実現
-    blackIn() {
-        // 画面全体を覆う黒い矩形を作成
-        const blackOverlay = this.add.graphics();
-        blackOverlay.fillStyle(0x000000, 1); // 黒色で塗りつぶし
-        blackOverlay.fillRect(0, 0, this.scale.width, this.scale.height);
-
-        // 黒いオーバーレイをフェードインさせるアニメーション
-        this.tweens.add({
-            targets: blackOverlay,
-            alpha: 0, // 透明にフェードアウト
-            duration: 4000, // フェードインの時間
-            ease: "Power2",
-            onComplete: () => {
-                // フェードインが完了した後、オーバーレイを削除
-                blackOverlay.destroy();
-            },
         });
     }
 }

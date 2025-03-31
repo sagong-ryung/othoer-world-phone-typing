@@ -1,9 +1,8 @@
 import Phaser from "phaser";
 import DialogueManager from "../../utils/DialogueManager";
+import EffectManager from "../../utils/EffectManager";
 
 export default class Scene8 extends Phaser.Scene {
-    private dialogueManager?: DialogueManager;
-
     constructor() {
         super({ key: "Chapter1Scene8" });
     }
@@ -23,13 +22,23 @@ export default class Scene8 extends Phaser.Scene {
             "主人公:「ふぅ…落ち着いた。」",
             "主人公:「ええい！考えても無駄だ！とにかく進んでみよう」",
         ];
-        this.dialogueManager = new DialogueManager(this, dialogues, 20);
+        const dialogueManager = new DialogueManager(this, dialogues, 20);
 
         this.input.keyboard?.on("keydown-SPACE", () => {
-            if (this.dialogueManager?.getIsLastDialogue()) {
-                this.scene.start("Chapter1Scene9");
+            if (dialogueManager?.getIsLastDialogue()) {
+                this.tweens.add({
+                    targets: bgImage,
+                    scaleX: 2, // 2倍にズーム
+                    scaleY: 2, // 2倍にズーム
+                    duration: 1000, // ズーム時間（ミリ秒）
+                    ease: "Power2", // イージング関数
+                    onComplete: () => {
+                        EffectManager.blackOut(this);
+                        this.scene.start("Chapter1Scene9");
+                    },
+                });
             } else {
-                this.dialogueManager?.skipDialogue();
+                dialogueManager?.skipDialogue();
             }
         });
     }

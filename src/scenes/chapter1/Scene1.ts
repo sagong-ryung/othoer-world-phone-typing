@@ -2,8 +2,6 @@ import Phaser from "phaser";
 import DialogueManager from "../../utils/DialogueManager";
 
 export default class Scene1 extends Phaser.Scene {
-    private dialogueManager?: DialogueManager;
-
     constructor() {
         super({ key: "Chapter1Scene1" });
     }
@@ -24,14 +22,14 @@ export default class Scene1 extends Phaser.Scene {
             "主人公: 「あれ、何か忘れてる気がする。。。\nやべっ、ほうれん草買い忘れてる！急いで戻らなきゃ」",
             "スーパーに急いで戻る",
         ];
-        this.dialogueManager = new DialogueManager(this, dialogues);
+        const dialogueManager = new DialogueManager(this, dialogues);
 
         this.input.keyboard?.on("keydown-SPACE", () => {
-            if (this.dialogueManager?.getIsLastDialogue()) {
+            if (dialogueManager?.getIsLastDialogue()) {
                 // 最後のセリフ後にスペースを押すと次のシーンに進む
                 this.scene.start("Chapter1Scene2"); // 次のシーンへ遷移
             } else {
-                this.dialogueManager?.skipDialogue(); // まだセリフが表示中ならスキップ
+                dialogueManager?.skipDialogue(); // まだセリフが表示中ならスキップ
             }
         });
     }

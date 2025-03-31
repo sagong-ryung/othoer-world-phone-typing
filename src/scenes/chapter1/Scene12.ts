@@ -3,10 +3,6 @@ import DialogueManager from "../../utils/DialogueManager";
 import TypingChallenge from "../../utils/TypingChallenge";
 
 export default class Scene11 extends Phaser.Scene {
-    private dialogueManager?: DialogueManager;
-    private typingChallenge1?: TypingChallenge;
-    private typingChallenge2?: TypingChallenge;
-
     constructor() {
         super({ key: "Chapter1Scene11" });
     }
@@ -29,9 +25,9 @@ export default class Scene11 extends Phaser.Scene {
             "辺りが静まり返っていて、余計にその音が響き渡る。",
             "どうしよう……取るべきか、、、？",
         ];
-        this.dialogueManager = new DialogueManager(this, dialogues, 20);
+        const dialogueManager = new DialogueManager(this, dialogues, 20);
 
-        this.typingChallenge1 = new TypingChallenge(
+        const typingChallenge1 = new TypingChallenge(
             this,
             200,
             400,
@@ -40,7 +36,7 @@ export default class Scene11 extends Phaser.Scene {
             24,
             5
         );
-        this.typingChallenge1.startTyping().then((success) => {
+        typingChallenge1.startTyping().then((success) => {
             if (success) {
                 this.scene.start("Chapter1Scene10");
             } else {
@@ -48,7 +44,7 @@ export default class Scene11 extends Phaser.Scene {
             }
         });
 
-        this.typingChallenge2 = new TypingChallenge(
+        const typingChallenge2 = new TypingChallenge(
             this,
             500,
             400,
@@ -57,7 +53,7 @@ export default class Scene11 extends Phaser.Scene {
             24,
             5
         );
-        this.typingChallenge2.startTyping().then((success) => {
+        typingChallenge2.startTyping().then((success) => {
             if (success) {
                 this.scene.start("Chapter1Scene10");
             } else {

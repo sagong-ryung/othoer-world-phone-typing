@@ -2,8 +2,6 @@ import Phaser from "phaser";
 import TypingChallenge from "../../utils/TypingChallenge";
 
 export default class Scene3 extends Phaser.Scene {
-    private typingChallenge?: TypingChallenge;
-
     constructor() {
         super({ key: "Chapter1Scene3" });
     }
@@ -19,7 +17,7 @@ export default class Scene3 extends Phaser.Scene {
         this.add.image(BG_X, BG_Y, "truck");
 
         const challengeTime = 5;
-        this.typingChallenge = new TypingChallenge(
+        const typingChallenge = new TypingChallenge(
             this,
             BG_X,
             400,
@@ -28,7 +26,7 @@ export default class Scene3 extends Phaser.Scene {
             32,
             challengeTime
         );
-        this.typingChallenge.startTyping().then((success) => {
+        typingChallenge.startTyping().then((success) => {
             if (success) {
                 this.scene.start("Chapter1Scene4");
             } else {

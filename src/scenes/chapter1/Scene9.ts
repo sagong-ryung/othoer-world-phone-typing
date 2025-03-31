@@ -17,9 +17,6 @@ const TypeWords: TypeWord[] = [
 ];
 
 export default class Scene9 extends Phaser.Scene {
-    private typingChallenge1?: TypingChallenge;
-    private typingChallenge2?: TypingChallenge;
-
     constructor() {
         super({ key: "Chapter1Scene9" });
     }
@@ -72,7 +69,7 @@ export default class Scene9 extends Phaser.Scene {
         var successTypingFlg = 0;
 
         // TypingChallenge1 を hotaru1 の下に配置
-        this.typingChallenge1 = new TypingChallenge(
+        const typingChallenge1 = new TypingChallenge(
             this,
             hotaru1.x,
             hotaru1.y + 60, // 60px 下に配置
@@ -81,7 +78,7 @@ export default class Scene9 extends Phaser.Scene {
             32,
             2
         );
-        this.typingChallenge1.startTyping().then((success) => {
+        typingChallenge1.startTyping().then((success) => {
             if (success) {
                 hotaru1.destroy();
                 successTypingFlg++;
@@ -94,7 +91,7 @@ export default class Scene9 extends Phaser.Scene {
         });
 
         // TypingChallenge2 を hotaru2 の下に配置
-        this.typingChallenge2 = new TypingChallenge(
+        const typingChallenge2 = new TypingChallenge(
             this,
             hotaru2.x,
             hotaru2.y + 60, // 60px 下に配置
@@ -103,7 +100,7 @@ export default class Scene9 extends Phaser.Scene {
             32,
             2
         );
-        this.typingChallenge2.startTyping().then((success) => {
+        typingChallenge2.startTyping().then((success) => {
             if (success) {
                 hotaru2.destroy();
                 successTypingFlg++;

@@ -2,8 +2,6 @@ import Phaser from "phaser";
 import DialogueManager from "../../utils/DialogueManager";
 
 export default class Scene10 extends Phaser.Scene {
-    private dialogueManager?: DialogueManager;
-
     constructor() {
         super({ key: "Chapter1Scene10" });
     }
@@ -26,12 +24,12 @@ export default class Scene10 extends Phaser.Scene {
             "主人公:「ふぅ…びっくりした……」",
             "主人公:「あれ！？右側になんかあるぞ…！？」",
         ];
-        this.dialogueManager = new DialogueManager(this, dialogues, 20);
+        const dialogueManager = new DialogueManager(this, dialogues, 20);
         this.input.keyboard?.on("keydown-SPACE", () => {
-            if (this.dialogueManager?.getIsLastDialogue()) {
+            if (dialogueManager?.getIsLastDialogue()) {
                 this.scene.start("Chapter1Scene11");
             } else {
-                this.dialogueManager?.skipDialogue();
+                dialogueManager?.skipDialogue();
             }
         });
     }
