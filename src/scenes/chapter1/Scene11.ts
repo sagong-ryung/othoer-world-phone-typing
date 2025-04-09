@@ -53,7 +53,7 @@ export default class Scene11 extends Phaser.Scene {
                 );
                 typingChallenge1.startTyping().then((success) => {
                     if (success) {
-                        this.scene.start("Chapter1Scene10");
+                        this.scene.start("Chapter1Scene12");
                     } else {
                         this.scene.start("GameOverScene");
                     }

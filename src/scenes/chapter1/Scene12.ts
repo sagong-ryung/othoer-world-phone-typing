@@ -1,64 +1,48 @@
 import Phaser from "phaser";
 import DialogueManager from "../../utils/DialogueManager";
-import TypingChallenge from "../../utils/TypingChallenge";
+import EffectManager from "../../utils/EffectManager";
 
-export default class Scene11 extends Phaser.Scene {
+export default class Scene12 extends Phaser.Scene {
     constructor() {
-        super({ key: "Chapter1Scene11" });
+        super({ key: "Chapter1Scene12" });
     }
 
     preload() {
         // 背景画像とホタルの画像を読み込み
-        this.load.image("phone", "assets/images/chapter1/phone.png");
+        this.load.image("phone_hand", "assets/images/chapter1/phone_hand.png");
+
+        // TODO 受話器を取る効果音
     }
 
     create() {
         // 背景画像の位置を中央に設定
         const BG_X = this.scale.width / 2;
         const BG_Y = this.scale.height / 2;
-        this.add.image(BG_X, BG_Y, "phone");
+        this.add.image(BG_X, BG_Y, "phone_hand");
 
         const dialogues: string[] = [
-            "主人公:「こんなところに公衆電話があるなんて……\n（自分の息遣いだけが響く）」",
-            "その瞬間、「ちりりりーん！」",
-            "主人公:「うわっ！」\n（思わず肩をビクッと震わせ、心臓が飛び跳ねる。。）",
-            "辺りが静まり返っていて、余計にその音が響き渡る。",
-            "どうしよう……取るべきか、、、？",
+            "ゆっくりと受話器を手に取り、恐る恐る耳に当てる。",
+            "主人公:「。。。」",
+            "？？？:「……しぃ……か……い……かえ……し……けぇ……」",
+            "（受話器の向こうから、低くてこもった声が聞こえてくる。）",
+            "（しかし、その声は言葉になっていないように感じる）",
+            "主人公:「……えっ？なんて言ってるんだろう……」",
+            "？？？:「……す…す……め……」",
         ];
-        const dialogueManager = new DialogueManager(this, dialogues, 20);
+        const dialogueManager = new DialogueManager(this, dialogues, 40);
 
-        const typingChallenge1 = new TypingChallenge(
-            this,
-            200,
-            400,
-            "受話器を取る",
-            "juwakiwotoru",
-            24,
-            5
-        );
-        typingChallenge1.startTyping().then((success) => {
-            if (success) {
-                this.scene.start("Chapter1Scene10");
-            } else {
-                this.scene.start("GameOverScene");
+        dialogueManager.onDialogueChange = (index: number) => {
+            if (index === 6) {
+                EffectManager.blackOut(this);
             }
-        });
 
-        const typingChallenge2 = new TypingChallenge(
-            this,
-            500,
-            400,
-            "受話器を取らない",
-            "juwakiwotoranai",
-            24,
-            5
-        );
-        typingChallenge2.startTyping().then((success) => {
-            if (success) {
-                this.scene.start("Chapter1Scene10");
+        }
+        this.input.keyboard?.on("keydown-SPACE", () => {
+            if (dialogueManager?.getIsLastDialogue()) {
+                this.scene.start("Chapter1Scene13");
             } else {
-                this.scene.start("GameOverScene");
+                dialogueManager?.skipDialogue();
             }
-        });
+        })
     }
 }

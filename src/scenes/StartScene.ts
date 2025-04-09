@@ -25,7 +25,7 @@ export default class StartScene extends Phaser.Scene {
 
         // テスト用
         this.input?.keyboard?.on("keydown-SPACE", () => {
-            this.scene.start("Chapter1Scene6");
+            this.scene.start("Chapter1Scene12");
         });
     }
 }
