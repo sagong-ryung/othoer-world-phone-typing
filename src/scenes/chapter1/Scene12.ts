@@ -39,7 +39,7 @@ export default class Scene12 extends Phaser.Scene {
         }
         this.input.keyboard?.on("keydown-SPACE", () => {
             if (dialogueManager?.getIsLastDialogue()) {
-                this.scene.start("Chapter1Scene13");
+                this.scene.start("Chapter2Scene0");
             } else {
                 dialogueManager?.skipDialogue();
             }
