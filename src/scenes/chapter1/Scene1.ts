@@ -1,36 +1,64 @@
 import Phaser from "phaser";
-import DialogueManager from "../../utils/DialogueManager";
+import { DialogBox, DialogBoxConfig } from "../../utils/DialogBox";
+import { Timeline } from "../../type/Timeline";
+import { TimelinePlayer } from "../../utils/TimelinePlayer";
+import { chapter1Data } from "../../data/chapter1";
 
 export default class Scene1 extends Phaser.Scene {
+    private timeline?: Timeline;
+
     constructor() {
         super({ key: "Chapter1Scene1" });
     }
 
-    preload() {
-        this.load.image("background", "assets/images/chapter1/background.jpg");
+    init(data: any) {
+        const timelineID = data.timelineID || "start";
+
+        if (!(timelineID in chapter1Data)) {
+            console.error(
+                `[ERROR] タイムラインID[${timelineID}]は登録されていません`
+            );
+            // 登録されていないタイムラインIDが指定されていたらタイトルシーンに遷移する
+            this.scene.start("StartScene");
+            return;
+        }
+
+        this.timeline = chapter1Data[timelineID];
     }
 
     create() {
-        // 背景画像
-        const BG_X = this.scale.width / 2;
-        const BG_Y = this.scale.height / 2;
-        this.add.image(BG_X, BG_Y, "background");
+        if (!this.timeline) {
+            return;
+        }
 
-        // セリフ
-        const dialogues: string[] = [
-            "主人公: 「やっとおつかい終わったな、\n早く帰らないとお母さんが心配する。」",
-            "主人公: 「あれ、何か忘れてる気がする。。。\nやべっ、ほうれん草買い忘れてる！急いで戻らなきゃ」",
-            "スーパーに急いで戻る",
-        ];
-        const dialogueManager = new DialogueManager(this, dialogues);
+        const { width, height } = this.game.canvas;
 
-        this.input.keyboard?.on("keydown-SPACE", () => {
-            if (dialogueManager?.getIsLastDialogue()) {
-                // 最後のセリフ後にスペースを押すと次のシーンに進む
-                this.scene.start("Chapter1Scene2"); // 次のシーンへ遷移
-            } else {
-                dialogueManager?.skipDialogue(); // まだセリフが表示中ならスキップ
-            }
-        });
+        const textStyle: Phaser.Types.GameObjects.Text.TextStyle = {
+            fontFamily:
+                '"Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif',
+            fontSize: "24px",
+        };
+
+        // dialog box
+        const dialogBoxHeight = 150;
+        const dialogBoxMargin = 20;
+        const dialogBoxConfig: DialogBoxConfig = {
+            x: width / 2 + dialogBoxMargin,
+            y: dialogBoxHeight + dialogBoxMargin,
+            width: width - dialogBoxMargin * 2,
+            height: dialogBoxHeight,
+            padding: 10,
+            margin: dialogBoxMargin,
+            textStyle: textStyle,
+        };
+
+        // DialogBoxの作成
+        const dialogBox = new DialogBox(this, dialogBoxConfig);
+
+        // タイムラインプレイヤーの作成
+        const timelinePlayer = new TimelinePlayer(this, dialogBox, textStyle);
+
+        // タイムラインの再生開始
+        timelinePlayer.start(this.timeline);
     }
 }

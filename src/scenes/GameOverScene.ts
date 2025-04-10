@@ -1,5 +1,4 @@
 import Phaser from "phaser";
-import PressSpaceText from "../components/PressSpaceText";
 
 export default class GameOverScene extends Phaser.Scene {
     constructor() {
@@ -32,10 +31,9 @@ export default class GameOverScene extends Phaser.Scene {
             })
             .setOrigin(0.5);
 
-
         // SPACEキーを押したらタイトル画面へ
         this.input.keyboard?.on("keydown-SPACE", () => {
-            this.scene.start("StartScene");
+            this.scene.start("ChapterSelectScene");
         });
     }
 }

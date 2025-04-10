@@ -6,10 +6,6 @@ export default class Scene2 extends Phaser.Scene {
         super({ key: "Chapter1Scene2" });
     }
 
-    preload() {
-        this.load.image("truck", "assets/images/chapter1/truck.jpg");
-    }
-
     create() {
         // 背景画像
         const BG_X = this.scale.width / 2;

@@ -31,7 +31,7 @@ export default class Scene0 extends Phaser.Scene {
 
         // SPACEキーを押すイベントを設定
         this.input?.keyboard?.on("keydown-SPACE", () => {
-            this.scene.start("Chapter1Scene1"); // 次のシーンに進む
+            this.scene.start("Chapter1Scene1", { timelineID: "start" }); // 次のシーンに進む
         });
     }
 }
