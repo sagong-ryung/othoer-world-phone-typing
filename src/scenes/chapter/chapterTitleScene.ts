@@ -45,5 +45,12 @@ export default class ChapterTitleScene extends Phaser.Scene {
                 timelineID: `chapter${this.chapterNum}_scene1`,
             }); // 次のシーンに進む
         });
+
+        // // デバッグ用
+        // this.input?.keyboard?.on("keydown-SPACE", () => {
+        //     this.scene.start(`ChapterPlayScene`, {
+        //         timelineID: `chapter2_scene1`,
+        //     }); // 次のシーンに進む
+        // });
     }
 }

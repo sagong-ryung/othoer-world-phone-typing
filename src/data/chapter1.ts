@@ -238,7 +238,7 @@ export const chapter1Data: Timelines = {
             text: "「……す………め……」",
             actorName: "？？？",
         },
-        { type: "sceneTransition", key: "chapter2_scene1" },
+        { type: "timelineTransition", timelineID: "chapter2_scene1" },
     ],
     chapter1_scene5_choice2: [
         { type: "sceneTransition", key: "GameOverScene" },

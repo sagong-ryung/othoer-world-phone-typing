@@ -25,6 +25,8 @@ export class AnimationManager {
                 return this.blackIn();
             case "blackOut":
                 return this.blackOut();
+            case "flash":
+                return this.flash();
             case "flashOut":
                 return this.flashOut();
             case "zoomIn":
@@ -45,7 +47,7 @@ export class AnimationManager {
     //     }
     // }
 
-    private blackIn(duration: number = 4000): Promise<void> {
+    private blackIn(duration: number = 1000): Promise<void> {
         return new Promise((resolve) => {
             const blackOverlay = this.scene.add.graphics();
             blackOverlay.fillStyle(0x000000, 1);
@@ -90,6 +92,25 @@ export class AnimationManager {
                 onComplete: () => {
                     resolve();
                 },
+            });
+        });
+    }
+
+    private flash(duration: number = 100): Promise<void> {
+        return new Promise((resolve) => {
+            const flash = this.scene.add.graphics();
+            flash.fillStyle(0xffffff, 1); // 完全な白
+            flash.fillRect(
+                0,
+                0,
+                this.scene.scale.width,
+                this.scene.scale.height
+            );
+
+            // 少し待ってから消してresolve
+            this.scene.time.delayedCall(duration, () => {
+                flash.destroy();
+                resolve();
             });
         });
     }
