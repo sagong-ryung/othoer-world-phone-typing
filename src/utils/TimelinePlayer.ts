@@ -1,7 +1,9 @@
-import { Timeline } from "../type/Timeline";
+import { Timeline, ForegroundProps } from "../type/Timeline";
 import { Choice } from "../type/Choice";
 import { DialogBox } from "./DialogBox";
 import { TypingChallenge } from "./TypingChallenge";
+import { Typing } from "../type/Typing";
+import { AnimationManager } from "./AnimationManager";
 
 export class TimelinePlayer {
     private backgroundLayer: Phaser.GameObjects.Container;
@@ -11,7 +13,9 @@ export class TimelinePlayer {
     private timeline?: Timeline;
     private timelineIndex = 0;
     // タイピングチャレンジ中かを示すフラグ
-    private typingChallengeActive: boolean = false;
+    private acceptSpaceInputFlag: boolean = true;
+
+    private animationManager: AnimationManager;
 
     constructor(
         private scene: Phaser.Scene,
@@ -24,9 +28,12 @@ export class TimelinePlayer {
         this.scene.add.existing(this.dialogBox); // ダイアログボックスは前景レイヤーとUIレイヤーの間に配置
         this.uiLayer = this.scene.add.container(0, 0);
 
+        // animation
+        this.animationManager = new AnimationManager(this.scene);
+
         // スペースキーで next() を実行（ただし、タイピングチャレンジ中は無視）
         this.scene.input.keyboard?.on("keydown-SPACE", () => {
-            if (!this.typingChallengeActive) {
+            if (this.acceptSpaceInputFlag) {
                 this.next();
             }
         });
@@ -51,22 +58,38 @@ export class TimelinePlayer {
     }
 
     // 前景画像を追加
-    private addForeground(x: number, y: number, texture: string) {
+    private addForeground(foregroundProps: ForegroundProps) {
+        const { x, y, key, scale } = foregroundProps;
         const foregroundImage = new Phaser.GameObjects.Image(
             this.scene,
             x,
             y,
-            texture
-        );
+            key
+        ).setScale(scale);
         this.foregroundLayer.add(foregroundImage);
     }
 
     // 前景をクリア
     private clearForeground() {
-        this.foregroundLayer.removeAll();
+        this.foregroundLayer.removeAll(true);
     }
 
-    // TODO 選択肢ボタンをセット  クリックじゃなく矢印で決めるようにしたい
+    private startAnimation(animationType: string) {
+        this.acceptSpaceInputFlag = false;
+        if (this.backgroundLayer) {
+            this.animationManager
+                .play(animationType, this.backgroundLayer)
+                .then(() => {
+                    this.acceptSpaceInputFlag = true;
+                    this.next();
+                });
+        } else {
+            this.animationManager.play(animationType);
+            this.acceptSpaceInputFlag = true;
+        }
+    }
+
+    // 選択肢ボタンをセット
     private setChoiceButtons(choices: Choice[]) {
         if (choices.length === 0) {
             return;
@@ -143,6 +166,29 @@ export class TimelinePlayer {
         });
     }
 
+    private startTypingChallenge = (typings: Typing[]) => {
+        this.acceptSpaceInputFlag = false;
+
+        const runTypingChallenge = (index: number) => {
+            if (index >= typings.length) {
+                this.acceptSpaceInputFlag = true;
+                this.next();
+                return;
+            }
+
+            const typingData = typings[index];
+            const typingChallenge = new TypingChallenge(this.scene, typingData);
+            typingChallenge.startTyping().then((success) => {
+                if (success) {
+                    runTypingChallenge(index + 1);
+                } else {
+                    this.scene.scene.start("GameOverScene");
+                }
+            });
+        };
+        runTypingChallenge(0);
+    };
+
     // 次のタイムラインを実行
     private next() {
         if (!this.timeline) {
@@ -177,17 +223,22 @@ export class TimelinePlayer {
                 break;
 
             case "addForeground": // 前景追加イベント
-                this.addForeground(
-                    timelineEvent.x,
-                    timelineEvent.y,
-                    timelineEvent.key
-                );
+                this.addForeground(timelineEvent);
                 this.next(); // すぐに次のタイムラインを実行する
                 break;
 
             case "clearForeground": // 前景クリアイベント
                 this.clearForeground();
                 this.next(); // すぐに次のタイムラインを実行する
+                break;
+
+            case "startAnimation":
+                this.startAnimation(timelineEvent.animationType);
+                break;
+
+            case "stopAnimation":
+                this.scene.tweens.killTweensOf(this.backgroundLayer);
+                this.next();
                 break;
 
             case "timelineTransition": // タイムライン遷移イベント
@@ -209,42 +260,7 @@ export class TimelinePlayer {
                 break;
 
             case "typingChallenge":
-                // console.log("typingChallenge");
-                // challenges プロパティにチャレンジ情報の配列が入っている前提です
-                const challengesData = timelineEvent.typings as {
-                    text: string;
-                    x: number;
-                    y: number;
-                }[];
-                this.typingChallengeActive = true;
-
-                // 順次実行する関数を定義
-                const runChallengeSequentially = (index: number) => {
-                    // すべてのチャレンジが完了したら、次のタイムラインイベントへ進む
-                    if (index >= challengesData.length) {
-                        this.typingChallengeActive = false;
-                        this.next();
-                        return;
-                    }
-
-                    const challengeData = challengesData[index];
-                    // TypingChallenge クラスを利用してチャレンジを開始
-                    const typingChallenge = new TypingChallenge(
-                        this.scene,
-                        challengeData.x,
-                        challengeData.y,
-                        challengeData.text,
-                        challengeData.displayText
-                        () => {
-                            // チャレンジ完了後、オブジェクトを破棄して次のチャレンジを開始
-                            typingChallenge.destroy();
-                            runChallengeSequentially(index + 1);
-                        }
-                    );
-                    this.uiLayer.add(typingChallenge);
-                };
-
-                runChallengeSequentially(0);
+                this.startTypingChallenge(timelineEvent.typings);
                 break;
 
             default:

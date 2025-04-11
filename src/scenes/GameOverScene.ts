@@ -33,7 +33,7 @@ export default class GameOverScene extends Phaser.Scene {
 
         // SPACEキーを押したらタイトル画面へ
         this.input.keyboard?.on("keydown-SPACE", () => {
-            this.scene.start("ChapterSelectScene");
+            this.scene.start("StartScene");
         });
     }
 }

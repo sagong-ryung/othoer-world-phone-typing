@@ -2,19 +2,20 @@ import Phaser from "phaser";
 import { DialogBox, DialogBoxConfig } from "../../utils/DialogBox";
 import { Timeline } from "../../type/Timeline";
 import { TimelinePlayer } from "../../utils/TimelinePlayer";
-import { chapter1Data } from "../../data/chapter1";
+import { chapterDatas } from "../../data";
 
-export default class Scene1 extends Phaser.Scene {
+export default class ChapterPlayScene extends Phaser.Scene {
     private timeline?: Timeline;
 
     constructor() {
-        super({ key: "Chapter1Scene1" });
+        super({ key: "ChapterPlayScene" });
     }
 
     init(data: any) {
-        const timelineID = data.timelineID || "start";
+        const timelineID = data.timelineID;
 
-        if (!(timelineID in chapter1Data)) {
+        if (!(timelineID in chapterDatas)) {
+            console.log(typeof timelineID);
             console.error(
                 `[ERROR] タイムラインID[${timelineID}]は登録されていません`
             );
@@ -23,7 +24,10 @@ export default class Scene1 extends Phaser.Scene {
             return;
         }
 
-        this.timeline = chapter1Data[timelineID];
+        this.timeline = chapterDatas[timelineID];
+
+        // デバッグ用
+        // this.timeline = chapter1Data["chapter1_scene1_5"];
     }
 
     create() {

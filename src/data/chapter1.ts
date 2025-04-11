@@ -1,7 +1,7 @@
 import { Timelines } from "../type/Timelines";
 
 export const chapter1Data: Timelines = {
-    start: [
+    chapter1_scene1: [
         { type: "setBackground", key: "turn_home" },
         {
             type: "dialog",
@@ -14,6 +14,19 @@ export const chapter1Data: Timelines = {
             actorName: "主人公",
         },
         { type: "dialog", text: "スーパーに急いで戻る" },
+        {
+            type: "typingChallenge",
+            typings: [
+                {
+                    displayText: "スーパーに急いで戻る",
+                    typeText: "su-pa-niisoidemodoru",
+                    x: 400,
+                    y: 300,
+                    challengeTime: 5,
+                    fontSize: 32,
+                },
+            ],
+        },
         { type: "timelineTransition", timelineID: "chapter1_scene2" },
     ],
     chapter1_scene2: [
@@ -30,21 +43,24 @@ export const chapter1Data: Timelines = {
             actorName: "主人公",
         },
         {
-            type: "dialog",
-            text: "「！？ えっ、うそっ！！」\n(ヘッドライトの光が視界を焼く。心臓が跳ね上がる。)",
-            actorName: "主人公",
-        },
-        // typing challenge
-        {
             type: "typingChallenge",
             typings: [
                 {
-                    text: "ほうれん草",
-                    displayText: "ほうれんそう",
+                    displayText: "立ち上がる",
+                    typeText: "tachiagaru",
                     x: 400,
                     y: 300,
+                    challengeTime: 3,
+                    fontSize: 32,
                 },
-                { text: "急いで", displayText: "いそいで", x: 400, y: 350 },
+                {
+                    displayText: "避ける",
+                    typeText: "yokeru",
+                    x: 400,
+                    y: 300,
+                    challengeTime: 3,
+                    fontSize: 32,
+                },
             ],
         },
         {
@@ -52,10 +68,15 @@ export const chapter1Data: Timelines = {
             text: "「やばい、間に合わない…！\n死ぬのか…！？ こんなとこで！」",
             actorName: "主人公",
         },
+        // TODO トラックのブレーキ音
+        { type: "startAnimation", animationType: "zoomIn" },
+        { type: "startAnimation", animationType: "flashOut" },
         { type: "timelineTransition", timelineID: "chapter1_scene3" },
     ],
     chapter1_scene3: [
         { type: "setBackground", key: "forest" },
+        { type: "startAnimation", animationType: "heartBeat" },
+        { type: "startAnimation", animationType: "blackIn" },
         {
             type: "dialog",
             text: "「うっ、い、痛くな…い…？どうして生きてるんだ…？」",
@@ -75,7 +96,20 @@ export const chapter1Data: Timelines = {
             text: "「誰か…誰かいるのか？ こんなところで一人なんて、、」",
             actorName: "主人公",
         },
-        // typing challenge
+        {
+            type: "typingChallenge",
+            typings: [
+                {
+                    displayText: "深呼吸をする",
+                    typeText: "shinkokyuuwosuru",
+                    x: 400,
+                    y: 300,
+                    challengeTime: 5,
+                    fontSize: 32,
+                },
+            ],
+        },
+        { type: "stopAnimation", animationType: "heartBeat" },
         {
             type: "dialog",
             text: "「ふぅ…落ち着いた。」",
@@ -86,11 +120,36 @@ export const chapter1Data: Timelines = {
             text: "「ええい！考えても無駄だ！とにかく進んでみよう」",
             actorName: "主人公",
         },
+        { type: "startAnimation", animationType: "zoomIn" },
+        { type: "startAnimation", animationType: "blackOut" },
         { type: "timelineTransition", timelineID: "chapter1_scene4" },
     ],
     chapter1_scene4: [
-        { type: "setBackground", key: "forest" },
-        // typing challenge hotaru
+        { type: "setBackground", key: "forest_phone" },
+        { type: "addForeground", x: 200, y: 300, key: "hotaru1", scale: 0.2 },
+        { type: "addForeground", x: 500, y: 300, key: "hotaru2", scale: 0.2 },
+        {
+            type: "typingChallenge",
+            typings: [
+                {
+                    displayText: "きらめき",
+                    typeText: "kirameki",
+                    x: 200,
+                    y: 400,
+                    challengeTime: 3,
+                    fontSize: 32,
+                },
+                {
+                    displayText: "幻想",
+                    typeText: "gensou",
+                    x: 500,
+                    y: 400,
+                    challengeTime: 3,
+                    fontSize: 32,
+                },
+            ],
+        },
+        { type: "clearForeground" },
         {
             type: "dialog",
             text: "「ふぅ…びっくりした……」",
@@ -101,12 +160,18 @@ export const chapter1Data: Timelines = {
             text: "「あれ！？右側になんかあるぞ…！？」",
             actorName: "主人公",
         },
-        // 進むアニメーション
+        // TODO 進むアニメーション
+        { type: "timelineTransition", timelineID: "chapter1_scene5" },
+    ],
+    chapter1_scene5: [
+        { type: "setBackground", key: "phone" },
         {
             type: "dialog",
             text: "「こんなところに公衆電話があるなんて……\n（自分の息遣いだけが響く）」",
             actorName: "主人公",
         },
+        { type: "setBackground", key: "call_phone" },
+        // TODO 震えるアニメーション
         {
             type: "dialog",
             text: "その瞬間、「ちりりりーん！」",
@@ -128,17 +193,19 @@ export const chapter1Data: Timelines = {
         {
             type: "choice",
             choices: [
-                { text: "受話器を取る", timelineID: "chapter1_scene4_choice1" },
+                {
+                    text: "受話器を取る",
+                    timelineID: "chapter1_scene5_choice1",
+                },
                 {
                     text: "受話器を取らない",
-                    timelineID: "chapter1_scene4_choice2",
+                    timelineID: "chapter1_scene5_choice2",
                 },
             ],
         },
     ],
-    chapter1_scene4_choice1: [
+    chapter1_scene5_choice1: [
         { type: "setBackground", key: "phone_hand" },
-        // { type: "addForeground", x: 400, y: 300, key: "robot" },
         {
             type: "dialog",
             text: "ゆっくりと受話器を手に取り、恐る恐る耳に当てる。",
@@ -171,9 +238,9 @@ export const chapter1Data: Timelines = {
             text: "「……す………め……」",
             actorName: "？？？",
         },
-        { type: "sceneTransition", key: "GameOverScene" },
+        { type: "sceneTransition", key: "chapter2_scene1" },
     ],
-    chapter1_scene4_choice2: [
+    chapter1_scene5_choice2: [
         { type: "sceneTransition", key: "GameOverScene" },
     ],
 };

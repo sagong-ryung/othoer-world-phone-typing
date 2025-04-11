@@ -16,17 +16,32 @@ type SetBackgroundEvent = {
     key: string;
 };
 
-// 前景追加イベント
-type AddForegroundEvent = {
-    type: "addForeground";
+// 共通のプロパティを定義
+export type ForegroundProps = {
     x: number;
     y: number;
     key: string;
+    scale?: number;
 };
+
+// それを使ってイベント型を定義
+export type AddForegroundEvent = {
+    type: "addForeground";
+} & ForegroundProps;
 
 // 前景クリアイベント
 type ClearForegroundEvent = {
     type: "clearForeground";
+};
+
+type startAnimation = {
+    type: "startAnimation";
+    animationType: string;
+};
+
+type stopAnimation = {
+    type: "stopAnimation";
+    animationType: string;
 };
 
 // タイムライン遷移イベント
@@ -59,6 +74,8 @@ export type Timeline = (
     | SetBackgroundEvent
     | AddForegroundEvent
     | ClearForegroundEvent
+    | startAnimation
+    | stopAnimation
     | TimelineTransitionEvent
     | SceneTransitionEvent
     | ChoiceEvent

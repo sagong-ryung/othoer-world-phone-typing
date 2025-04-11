@@ -1,15 +1,21 @@
 import Phaser from "phaser";
 
+export type ChapterData = {
+    chapterNum: number;
+    title: string;
+    subTitle: string;
+};
+
 export default class ChapterSelectScene extends Phaser.Scene {
     private chapters: Phaser.GameObjects.Text[] = [];
     private selectedIndex: number = 0;
     // 表示する章の名称（ここでは日本語表示）
-    private chapterNames: string[] = [
-        "第1章",
-        "第2章",
-        "第3章",
-        "第4章",
-        "第5章",
+    private ChapterDatas: ChapterData[] = [
+        { chapterNum: 1, title: "第1章", subTitle: "帰り道" },
+        { chapterNum: 2, title: "第2章", subTitle: "境界線" },
+        { chapterNum: 3, title: "第3章", subTitle: "？？？" },
+        { chapterNum: 4, title: "第4章", subTitle: "？？？" },
+        { chapterNum: 5, title: "第5章", subTitle: "？？？" },
     ];
 
     constructor() {
@@ -36,9 +42,9 @@ export default class ChapterSelectScene extends Phaser.Scene {
         // 各章のテキストを作成（縦に並べる）
         const startY = 200;
         const spacing = 60; // 各テキスト間の間隔
-        this.chapterNames.forEach((name, index) => {
+        this.ChapterDatas.forEach((data, index) => {
             let chapterText = this.add
-                .text(400, startY + index * spacing, name, {
+                .text(400, startY + index * spacing, data.title, {
                     fontSize: "32px",
                     color: "#FFF",
                     fontFamily: "Arial",
@@ -73,8 +79,11 @@ export default class ChapterSelectScene extends Phaser.Scene {
 
         // エンターキーもスペースキーも決定キーとする
         const confirmSelection = () => {
-            const chapterSceneKey = `Chapter${this.selectedIndex + 1}Scene0`;
-            this.scene.start(chapterSceneKey);
+            this.scene.start("ChapterTitleScene", {
+                chapterNum: this.selectedIndex + 1,
+                title: this.ChapterDatas[this.selectedIndex].title,
+                subTitle: this.ChapterDatas[this.selectedIndex].subTitle,
+            });
         };
 
         this.input.keyboard?.on("keydown-SPACE", confirmSelection);
