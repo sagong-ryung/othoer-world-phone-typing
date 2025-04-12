@@ -241,6 +241,6 @@ export const chapter1Data: Timelines = {
         { type: "timelineTransition", timelineID: "chapter2_scene1" },
     ],
     chapter1_scene5_choice2: [
-        { type: "sceneTransition", key: "GameOverScene" },
+        { type: "sceneTransition", key: "GameOverScene", data: {chapterNum: 2, title: "第二章", subTitle: "境界線"}},
     ],
 };
