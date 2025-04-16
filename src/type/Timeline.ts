@@ -68,6 +68,11 @@ type TypingchallengeEvent = {
     typings: Typing[];
 };
 
+type CompletedChapterEvent = {
+    type: "completedChapter";
+    completedChapterNum: number;
+};
+
 // Timelineはイベントの配列
 export type Timeline = (
     | DialogEvent
@@ -80,4 +85,5 @@ export type Timeline = (
     | SceneTransitionEvent
     | ChoiceEvent
     | TypingchallengeEvent
+    | CompletedChapterEvent
 )[];

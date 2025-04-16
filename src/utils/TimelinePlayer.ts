@@ -48,24 +48,16 @@ export class TimelinePlayer {
     // 背景画像をセット
     private setBackground(x: number, y: number, texture: string) {
         this.backgroundLayer.removeAll();
-        const backgroundImage = new Phaser.GameObjects.Image(
-            this.scene,
-            x,
-            y,
-            texture
-        ).setDepth(-1);
+        const backgroundImage = new Phaser.GameObjects.Image(this.scene, x, y, texture).setDepth(
+            -1
+        );
         this.backgroundLayer.add(backgroundImage);
     }
 
     // 前景画像を追加
     private addForeground(foregroundProps: ForegroundProps) {
         const { x, y, key, scale } = foregroundProps;
-        const foregroundImage = new Phaser.GameObjects.Image(
-            this.scene,
-            x,
-            y,
-            key
-        ).setScale(scale);
+        const foregroundImage = new Phaser.GameObjects.Image(this.scene, x, y, key).setScale(scale);
         this.foregroundLayer.add(foregroundImage);
     }
 
@@ -77,12 +69,10 @@ export class TimelinePlayer {
     private startAnimation(animationType: string) {
         this.acceptSpaceInputFlag = false;
         if (this.backgroundLayer) {
-            this.animationManager
-                .play(animationType, this.backgroundLayer)
-                .then(() => {
-                    this.acceptSpaceInputFlag = true;
-                    this.next();
-                });
+            this.animationManager.play(animationType, this.backgroundLayer).then(() => {
+                this.acceptSpaceInputFlag = true;
+                this.next();
+            });
         } else {
             this.animationManager.play(animationType);
             this.acceptSpaceInputFlag = true;
@@ -118,10 +108,7 @@ export class TimelinePlayer {
         };
 
         choices.forEach((choice, index) => {
-            const y =
-                buttonGroupOriginY +
-                buttonHeight * (index + 0.5) +
-                buttonMargin * index;
+            const y = buttonGroupOriginY + buttonHeight * (index + 0.5) + buttonMargin * index;
 
             const button = new Phaser.GameObjects.Rectangle(
                 this.scene,
@@ -150,8 +137,7 @@ export class TimelinePlayer {
         updateSelection();
 
         this.scene.input.keyboard?.on("keydown-UP", () => {
-            selectedIndex =
-                (selectedIndex - 1 + choices.length) % choices.length;
+            selectedIndex = (selectedIndex - 1 + choices.length) % choices.length;
             updateSelection();
         });
 
@@ -188,6 +174,16 @@ export class TimelinePlayer {
         };
         runTypingChallenge(0);
     };
+
+    private completedChapter(completedChapterNum: number) {
+        const stored = localStorage.getItem("completedChapterNum");
+        const currentCompChapNum = stored ? parseInt(stored) : 0;
+
+        // 現在のチャプターよりクリアしたチャプターが大きければlocalstrageを更新する
+        if (currentCompChapNum < completedChapterNum) {
+            localStorage.setItem("completedChapterNum", String(completedChapterNum));
+        }
+    }
 
     // 次のタイムラインを実行
     private next() {
@@ -261,6 +257,11 @@ export class TimelinePlayer {
 
             case "typingChallenge":
                 this.startTypingChallenge(timelineEvent.typings);
+                break;
+
+            case "completedChapter":
+                this.completedChapter(timelineEvent.completedChapterNum);
+                this.next();
                 break;
 
             default:

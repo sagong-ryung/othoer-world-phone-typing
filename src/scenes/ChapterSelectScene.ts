@@ -9,13 +9,13 @@ export type ChapterData = {
 export default class ChapterSelectScene extends Phaser.Scene {
     private chapters: Phaser.GameObjects.Text[] = [];
     private selectedIndex: number = 0;
-    // 表示する章の名称（ここでは日本語表示）
+    private completedChapterNum: number = 0;
     private ChapterDatas: ChapterData[] = [
         { chapterNum: 1, title: "第1章", subTitle: "帰り道" },
         { chapterNum: 2, title: "第2章", subTitle: "境界線" },
-        { chapterNum: 3, title: "第3章", subTitle: "？？？" },
-        { chapterNum: 4, title: "第4章", subTitle: "？？？" },
-        { chapterNum: 5, title: "第5章", subTitle: "？？？" },
+        { chapterNum: 3, title: "第3章", subTitle: "心の試練" },
+        { chapterNum: 4, title: "第4章", subTitle: "境界を越えて" },
+        { chapterNum: 5, title: "第5章", subTitle: "終焉、そして始まり" },
     ];
 
     constructor() {
@@ -24,13 +24,16 @@ export default class ChapterSelectScene extends Phaser.Scene {
 
     init() {
         this.chapters = [];
+        this.selectedIndex = 0;
+
+        // ローカルストレージから読み込み（なければ0）
+        const stored = localStorage.getItem("completedChapterNum");
+        this.completedChapterNum = stored ? parseInt(stored) : 0;
     }
 
     create() {
-        // 背景色を暗く設定（ホラー感を演出）
         this.cameras.main.setBackgroundColor(0x000000);
 
-        // シーンタイトル（中央上部）
         this.add
             .text(400, 100, "章選択", {
                 fontSize: "48px",
@@ -39,51 +42,46 @@ export default class ChapterSelectScene extends Phaser.Scene {
             })
             .setOrigin(0.5);
 
-        // 各章のテキストを作成（縦に並べる）
         const startY = 200;
-        const spacing = 60; // 各テキスト間の間隔
+        const spacing = 60;
+
         this.ChapterDatas.forEach((data, index) => {
+            const isUnlocked = data.chapterNum <= this.completedChapterNum + 1;
+            const textColor = isUnlocked ? "#FFF" : "#666";
+
             let chapterText = this.add
                 .text(400, startY + index * spacing, data.title, {
                     fontSize: "32px",
-                    color: "#FFF",
+                    color: textColor,
                     fontFamily: "Arial",
                 })
                 .setOrigin(0.5);
+
             this.chapters.push(chapterText);
         });
 
-        // 初期選択状態の更新（最初の章をハイライト）
+        // 最初に選択可能な章にカーソルを合わせる
+        this.selectedIndex = this.getFirstUnlockedIndex();
         this.updateSelection();
 
-        // 矢印キーで選択肢を移動
         this.input.keyboard?.on("keydown-UP", () => {
-            // 配列の先頭に戻るようにラップ
-            this.selectedIndex = Phaser.Math.Wrap(
-                this.selectedIndex - 1,
-                0,
-                this.chapters.length
-            );
-            this.updateSelection();
+            this.moveSelection(-1);
         });
 
         this.input.keyboard?.on("keydown-DOWN", () => {
-            // 配列の末尾を超えたら先頭へ
-            this.selectedIndex = Phaser.Math.Wrap(
-                this.selectedIndex + 1,
-                0,
-                this.chapters.length
-            );
-            this.updateSelection();
+            this.moveSelection(1);
         });
 
-        // エンターキーもスペースキーも決定キーとする
         const confirmSelection = () => {
-            this.scene.start("ChapterTitleScene", {
-                chapterNum: this.selectedIndex + 1,
-                title: this.ChapterDatas[this.selectedIndex].title,
-                subTitle: this.ChapterDatas[this.selectedIndex].subTitle,
-            });
+            const chapterData = this.ChapterDatas[this.selectedIndex];
+            const isUnlocked = chapterData.chapterNum <= this.completedChapterNum + 1;
+            if (isUnlocked) {
+                this.scene.start("ChapterTitleScene", {
+                    chapterNum: chapterData.chapterNum,
+                    title: chapterData.title,
+                    subTitle: chapterData.subTitle,
+                });
+            }
         };
 
         this.input.keyboard?.on("keydown-SPACE", confirmSelection);
@@ -91,13 +89,32 @@ export default class ChapterSelectScene extends Phaser.Scene {
     }
 
     private updateSelection() {
-        // 選択状態に応じたハイライト（例：選択中は赤色）
         this.chapters.forEach((chapterText, index) => {
-            if (index === this.selectedIndex) {
-                chapterText.setStyle({ color: "#F00" }); // ハイライト（赤色）
+            const isUnlocked = this.ChapterDatas[index].chapterNum <= this.completedChapterNum + 1;
+            if (index === this.selectedIndex && isUnlocked) {
+                chapterText.setStyle({ color: "#F00" }); // ハイライト
+            } else if (!isUnlocked) {
+                chapterText.setStyle({ color: "#666" }); // ロック表示
             } else {
-                chapterText.setStyle({ color: "#FFF" }); // 通常時は白色
+                chapterText.setStyle({ color: "#FFF" });
             }
         });
+    }
+
+    private moveSelection(direction: number) {
+        let nextIndex = this.selectedIndex;
+
+        do {
+            nextIndex = Phaser.Math.Wrap(nextIndex + direction, 0, this.chapters.length);
+        } while (this.ChapterDatas[nextIndex].chapterNum > this.completedChapterNum + 1);
+
+        this.selectedIndex = nextIndex;
+        this.updateSelection();
+    }
+
+    private getFirstUnlockedIndex(): number {
+        return this.ChapterDatas.findIndex(
+            (data) => data.chapterNum <= this.completedChapterNum + 1
+        );
     }
 }

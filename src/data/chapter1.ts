@@ -238,9 +238,8 @@ export const chapter1Data: Timelines = {
             text: "「……す………め……」",
             actorName: "？？？",
         },
-        { type: "timelineTransition", timelineID: "chapter2_scene1" },
+        { type: "completedChapter", completedChapterNum: 1 },
+        { type: "sceneTransition", key: "ChapterSelectScene" },
     ],
-    chapter1_scene5_choice2: [
-        { type: "sceneTransition", key: "GameOverScene", data: {chapterNum: 2, title: "第二章", subTitle: "境界線"}},
-    ],
+    chapter1_scene5_choice2: [{ type: "sceneTransition", key: "GameOverScene" }],
 };

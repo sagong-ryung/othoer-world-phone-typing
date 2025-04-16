@@ -18,12 +18,6 @@ export default class StartScene extends Phaser.Scene {
 
         new PressSpaceText(this, 400, 500);
 
-        // ボタンをクリックした時のイベント
-        // this.input?.keyboard?.on("keydown-SPACE", () => {
-        //     this.scene.start("Chapter1Scene0");
-        // });
-
-        // テスト用
         this.input?.keyboard?.on("keydown-SPACE", () => {
             this.scene.start("ChapterSelectScene");
         });

@@ -40,13 +40,7 @@ export class TypingChallenge {
             this.resolveChallenge = resolve;
 
             // プログレスバーの作成
-            this.progressBar = new ProgressBar(
-                this.scene,
-                this.x - 100,
-                this.y - 60,
-                300,
-                20
-            );
+            this.progressBar = new ProgressBar(this.scene, this.x / 2, this.y - 60, 300, 20);
             this.progressBar.updateProgress(1);
 
             // ターゲット単語のテキスト表示
@@ -60,15 +54,9 @@ export class TypingChallenge {
                 .setDepth(1);
 
             // ローマ字単語のテキスト表示
-            const totalRomajiWidth =
-                this.romajiWord.length * (this.fontSize / 2); // ローマ字テキストの幅の合計
+            const totalRomajiWidth = this.romajiWord.length * (this.fontSize / 2); // ローマ字テキストの幅の合計
             const romajiStartX = this.x - totalRomajiWidth / 2; // 中央に揃えるためのX座標
-            this.romajiTextObjects = this.createTextObjects(
-                this.romajiWord,
-                romajiStartX,
-                this.y + 50,
-                "#ffffff"
-            );
+            this.romajiTextObjects = this.createTextObjects(this.romajiWord, romajiStartX, this.y + 50, "#ffffff");
 
             // ターゲット単語とローマ字単語のテキストの結合された境界を取得
             const targetTextBounds = this.targetTextObject.getBounds();
@@ -84,10 +72,7 @@ export class TypingChallenge {
             const minY = Math.min(targetTextBounds.y, romajiTextBounds.y); // 両方のテキストで最小の高さを選択
 
             // 両方のテキストの高さを合計
-            const totalHeight =
-                romajiTextBounds.y +
-                romajiTextBounds.height -
-                targetTextBounds.y;
+            const totalHeight = romajiTextBounds.y + romajiTextBounds.height - targetTextBounds.y;
             const maxWidth = Math.max(targetTextBounds.width, totalWidth); // 両方のテキストで最大の幅を選択
 
             // ターゲット単語とローマ字単語の両方を囲む枠を作成
@@ -95,20 +80,8 @@ export class TypingChallenge {
                 .graphics()
                 .lineStyle(2, 0x808080) // グレーの枠線
                 .fillStyle(0x000000)
-                .fillRoundedRect(
-                    minX - 20,
-                    minY - 15,
-                    maxWidth + 45,
-                    totalHeight + 30,
-                    5
-                ) // 角を丸くした背景
-                .strokeRoundedRect(
-                    minX - 20,
-                    minY - 15,
-                    maxWidth + 45,
-                    totalHeight + 30,
-                    5
-                ) // 角を丸くした枠線
+                .fillRoundedRect(minX - 20, minY - 15, maxWidth + 45, totalHeight + 30, 5) // 角を丸くした背景
+                .strokeRoundedRect(minX - 20, minY - 15, maxWidth + 45, totalHeight + 30, 5) // 角を丸くした枠線
                 .setDepth(0);
 
             // タイマー開始
@@ -119,12 +92,7 @@ export class TypingChallenge {
         });
     }
 
-    private createTextObjects(
-        word: string,
-        x: number,
-        y: number,
-        color: string
-    ): Phaser.GameObjects.Text[] {
+    private createTextObjects(word: string, x: number, y: number, color: string): Phaser.GameObjects.Text[] {
         let textObjects: Phaser.GameObjects.Text[] = [];
         for (let i = 0; i < word.length; i++) {
             const textObject = this.scene.add
@@ -146,9 +114,7 @@ export class TypingChallenge {
             loop: true,
             callback: () => {
                 this.timeRemaining -= 0.1;
-                this.progressBar.updateProgress(
-                    this.timeRemaining / this.timeLimit
-                );
+                this.progressBar.updateProgress(this.timeRemaining / this.timeLimit);
 
                 if (this.timeRemaining <= 0) {
                     this.endChallenge(false);
@@ -188,10 +154,7 @@ export class TypingChallenge {
         for (let i = 0; i < this.romajiWord.length; i++) {
             let color = "#ffffff"; // デフォルトは白
 
-            if (
-                i < this.inputText.length &&
-                this.romajiWord[i] === this.inputText[i]
-            ) {
+            if (i < this.inputText.length && this.romajiWord[i] === this.inputText[i]) {
                 color = "#808080"; // 正しい入力なら灰色
             }
 

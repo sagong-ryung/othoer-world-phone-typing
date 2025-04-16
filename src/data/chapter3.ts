@@ -3,7 +3,7 @@ import { Timelines } from "../type/Timelines";
 export const chapter3Data: Timelines = {
     chapter3_scene1: [
         { type: "startAnimation", animationType: "blackIn" },
-        { type: "setBackground", key: "ruins_entrance" },
+        { type: "setBackground", key: "chapter3_img1" },
         {
             type: "dialog",
             text: "「やっと……町を抜けたと思ったら、今度は遺跡……？」",
@@ -19,7 +19,7 @@ export const chapter3Data: Timelines = {
             typings: [
                 {
                     displayText: "静まり返った遺跡を進む",
-                    typeText: "shizumarikaettaisekiwosusumu",
+                    typeText: "sizumarikaettaisekiwosusumu",
                     x: 400,
                     y: 300,
                     challengeTime: 6,
@@ -27,7 +27,7 @@ export const chapter3Data: Timelines = {
                 },
                 {
                     displayText: "風の音しか聞こえない",
-                    typeText: "kazenootoshikakikoenai",
+                    typeText: "kazenootosikakikoenai",
                     x: 400,
                     y: 360,
                     challengeTime: 6,
@@ -61,7 +61,7 @@ export const chapter3Data: Timelines = {
     ],
 
     chapter3_trial_intro: [
-        { type: "setBackground", key: "ruins_hall" },
+        { type: "setBackground", key: "chapter3_img2" },
         {
             type: "dialog",
             text: "「この遺跡には三つの試練がある」",
@@ -76,7 +76,7 @@ export const chapter3Data: Timelines = {
     ],
 
     chapter3_trial1: [
-        { type: "setBackground", key: "ruins_memory_chamber" },
+        { type: "setBackground", key: "chapter3_img3" },
         {
             type: "typingChallenge",
             typings: [
@@ -112,7 +112,7 @@ export const chapter3Data: Timelines = {
     ],
 
     chapter3_trial2: [
-        { type: "setBackground", key: "ruins_emotion_hall" },
+        { type: "setBackground", key: "chapter3_img3" },
         {
             type: "typingChallenge",
             typings: [
@@ -126,7 +126,7 @@ export const chapter3Data: Timelines = {
                 },
                 {
                     displayText: "悲しみを力に変える",
-                    typeText: "kanashimiwochikaranikaeru",
+                    typeText: "kanasimiwochikaranikaeru",
                     x: 400,
                     y: 360,
                     challengeTime: 6,
@@ -143,7 +143,7 @@ export const chapter3Data: Timelines = {
     ],
 
     chapter3_select1: [
-        { type: "setBackground", key: "ruins_three_paths" },
+        { type: "setBackground", key: "chapter3_img4" },
         {
             type: "dialog",
             text: "「この先に三つの道がある。どの道も正解になりうる。ただし…覚悟が問われる」",
@@ -160,7 +160,7 @@ export const chapter3Data: Timelines = {
     ],
 
     chapter3_wrong1: [
-        { type: "setBackground", key: "ruins_trap" },
+        { type: "setBackground", key: "chapter3_img4" },
         {
             type: "dialog",
             text: "「わっ……床が崩れる！？」",
@@ -176,7 +176,7 @@ export const chapter3Data: Timelines = {
     ],
 
     chapter3_wrong2: [
-        { type: "setBackground", key: "ruins_loop" },
+        { type: "setBackground", key: "chapter3_img4" },
         {
             type: "dialog",
             text: "（何度も同じ場所に戻ってる……）",
@@ -187,7 +187,7 @@ export const chapter3Data: Timelines = {
             typings: [
                 {
                     displayText: "抜け出すには冷静さが必要だ",
-                    typeText: "nukedasunihareiseisagahitsuyouda",
+                    typeText: "nukedasunihareiseisagahituyouda",
                     x: 400,
                     y: 300,
                     challengeTime: 8,
@@ -199,7 +199,7 @@ export const chapter3Data: Timelines = {
     ],
 
     chapter3_scene2: [
-        { type: "setBackground", key: "ruins_chamber" },
+        { type: "setBackground", key: "chapter3_img5" },
         {
             type: "dialog",
             text: "「よくぞここまで辿り着いたわね」",
@@ -210,7 +210,7 @@ export const chapter3Data: Timelines = {
             typings: [
                 {
                     displayText: "君は誰なんだ…？",
-                    typeText: "kimihadanenanda",
+                    typeText: "kimihadarenanda",
                     x: 400,
                     y: 300,
                     challengeTime: 4,
@@ -218,7 +218,7 @@ export const chapter3Data: Timelines = {
                 },
                 {
                     displayText: "なぜ試練を課したんだ？",
-                    typeText: "nazesirenuokashitanda",
+                    typeText: "nazesirenwokasitanda",
                     x: 400,
                     y: 360,
                     challengeTime: 5,
@@ -246,6 +246,7 @@ export const chapter3Data: Timelines = {
             text: "「次の章で、あなたの運命が動き出す」",
             actorName: "謎の少女",
         },
-        { type: "timelineTransition", timelineID: "chapter4_scene1" },
+        { type: "completedChapter", completedChapterNum: 3 },
+        { type: "sceneTransition", key: "ChapterSelectScene" },
     ],
 };

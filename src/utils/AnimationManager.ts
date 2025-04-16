@@ -13,10 +13,7 @@ export class AnimationManager {
         this.scene = scene;
     }
 
-    public play(
-        animationType: string,
-        target?: animationTarget
-    ): Promise<void> {
+    public play(animationType: string, target?: animationTarget): Promise<void> {
         // 先に止める（多重再生防止）
         stop();
 
@@ -29,34 +26,29 @@ export class AnimationManager {
                 return this.flash();
             case "flashOut":
                 return this.flashOut();
+            case "whiteOut":
+                return this.whiteOut();
             case "zoomIn":
                 return this.ZoomIn(target);
             case "heartBeat":
                 return this.HeartBeat(target);
             default:
-                throw new Error(
-                    `指定したアニメーションがないです。：${animationType}`
-                );
+                throw new Error(`指定したアニメーションがないです。：${animationType}`);
         }
     }
 
-    // public stop() {
-    //     if (this.currentTween) {
-    //         this.currentTween.stop();
-    //         this.currentTween = undefined;
-    //     }
-    // }
+    public stop() {
+        if (this.currentTween) {
+            this.currentTween.stop();
+            this.currentTween = undefined;
+        }
+    }
 
     private blackIn(duration: number = 1000): Promise<void> {
         return new Promise((resolve) => {
             const blackOverlay = this.scene.add.graphics();
             blackOverlay.fillStyle(0x000000, 1);
-            blackOverlay.fillRect(
-                0,
-                0,
-                this.scene.scale.width,
-                this.scene.scale.height
-            );
+            blackOverlay.fillRect(0, 0, this.scene.scale.width, this.scene.scale.height);
             blackOverlay.setAlpha(1);
 
             this.currentTween = this.scene.tweens.add({
@@ -76,12 +68,7 @@ export class AnimationManager {
         return new Promise((resolve) => {
             const blackOverlay = this.scene.add.graphics();
             blackOverlay.fillStyle(0x000000, 1);
-            blackOverlay.fillRect(
-                0,
-                0,
-                this.scene.scale.width,
-                this.scene.scale.height
-            );
+            blackOverlay.fillRect(0, 0, this.scene.scale.width, this.scene.scale.height);
             blackOverlay.setAlpha(0);
 
             this.currentTween = this.scene.tweens.add({
@@ -100,12 +87,7 @@ export class AnimationManager {
         return new Promise((resolve) => {
             const flash = this.scene.add.graphics();
             flash.fillStyle(0xffffff, 1); // 完全な白
-            flash.fillRect(
-                0,
-                0,
-                this.scene.scale.width,
-                this.scene.scale.height
-            );
+            flash.fillRect(0, 0, this.scene.scale.width, this.scene.scale.height);
 
             // 少し待ってから消してresolve
             this.scene.time.delayedCall(duration, () => {
@@ -119,12 +101,7 @@ export class AnimationManager {
         return new Promise((resolve) => {
             const flash = this.scene.add.graphics();
             flash.fillStyle(0xffffff, 1);
-            flash.fillRect(
-                0,
-                0,
-                this.scene.scale.width,
-                this.scene.scale.height
-            );
+            flash.fillRect(0, 0, this.scene.scale.width, this.scene.scale.height);
             flash.setAlpha(1);
 
             this.currentTween = this.scene.tweens.add({
@@ -145,6 +122,25 @@ export class AnimationManager {
                 scaleX: 2,
                 scaleY: 2,
                 duration: 1000,
+                ease: "Power2",
+                onComplete: () => {
+                    resolve();
+                },
+            });
+        });
+    }
+
+    private whiteOut(duration: number = 1000): Promise<void> {
+        return new Promise((resolve) => {
+            const whiteOverlay = this.scene.add.graphics();
+            whiteOverlay.fillStyle(0xffffff, 1);
+            whiteOverlay.fillRect(0, 0, this.scene.scale.width, this.scene.scale.height);
+            whiteOverlay.setAlpha(0); // 最初は透明
+
+            this.currentTween = this.scene.tweens.add({
+                targets: whiteOverlay,
+                alpha: 1, // 徐々に白くする
+                duration: duration,
                 ease: "Power2",
                 onComplete: () => {
                     resolve();
