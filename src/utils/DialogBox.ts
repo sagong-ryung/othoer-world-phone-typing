@@ -1,4 +1,4 @@
-import Typewriter from "./Typewriter"; // Typewriter クラスのインポート
+// import Typewriter from "./Typewriter"; // Typewriter クラスのインポート
 
 export type DialogBoxConfig = {
     x: number;
@@ -17,15 +17,7 @@ export class DialogBox extends Phaser.GameObjects.Container {
 
     constructor(
         public scene: Phaser.Scene,
-        {
-            x,
-            y,
-            width,
-            height,
-            padding = 10,
-            margin = 10,
-            textStyle = {},
-        }: DialogBoxConfig
+        { x, y, width, height, padding = 10, margin = 10, textStyle = {} }: DialogBoxConfig
     ) {
         // Phaser.GameObjects.Containerのコンストラクタ
         super(scene, 0, 0);

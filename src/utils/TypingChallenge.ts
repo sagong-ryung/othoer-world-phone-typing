@@ -16,11 +16,9 @@ export class TypingChallenge {
     private timeRemaining!: number;
     private timerEvent?: Phaser.Time.TimerEvent;
     private isComplete: boolean = false;
-    private successState: boolean = false;
     private resolveChallenge?: (success: boolean) => void;
     private targetTextObject!: Phaser.GameObjects.Text;
     private romajiTextObjects: Phaser.GameObjects.Text[] = [];
-    private isFocus: boolean = false;
 
     constructor(scene: Phaser.Scene, typingData: Typing) {
         this.scene = scene;
@@ -35,7 +33,6 @@ export class TypingChallenge {
     public startTyping(): Promise<boolean> {
         return new Promise((resolve) => {
             this.isComplete = false;
-            this.successState = false;
             this.timeRemaining = this.timeLimit;
             this.resolveChallenge = resolve;
 
@@ -56,7 +53,12 @@ export class TypingChallenge {
             // ローマ字単語のテキスト表示
             const totalRomajiWidth = this.romajiWord.length * (this.fontSize / 2); // ローマ字テキストの幅の合計
             const romajiStartX = this.x - totalRomajiWidth / 2; // 中央に揃えるためのX座標
-            this.romajiTextObjects = this.createTextObjects(this.romajiWord, romajiStartX, this.y + 50, "#ffffff");
+            this.romajiTextObjects = this.createTextObjects(
+                this.romajiWord,
+                romajiStartX,
+                this.y + 50,
+                "#ffffff"
+            );
 
             // ターゲット単語とローマ字単語のテキストの結合された境界を取得
             const targetTextBounds = this.targetTextObject.getBounds();
@@ -92,7 +94,12 @@ export class TypingChallenge {
         });
     }
 
-    private createTextObjects(word: string, x: number, y: number, color: string): Phaser.GameObjects.Text[] {
+    private createTextObjects(
+        word: string,
+        x: number,
+        y: number,
+        color: string
+    ): Phaser.GameObjects.Text[] {
         let textObjects: Phaser.GameObjects.Text[] = [];
         for (let i = 0; i < word.length; i++) {
             const textObject = this.scene.add
@@ -167,7 +174,6 @@ export class TypingChallenge {
         if (this.isComplete) return;
 
         this.isComplete = true;
-        this.successState = success;
         this.timerEvent?.destroy();
         this.progressBar.destroy();
 

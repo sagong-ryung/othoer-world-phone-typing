@@ -16,9 +16,7 @@ export default class ChapterPlayScene extends Phaser.Scene {
 
         if (!(timelineID in chapterDatas)) {
             console.log(typeof timelineID);
-            console.error(
-                `[ERROR] タイムラインID[${timelineID}]は登録されていません`
-            );
+            console.error(`[ERROR] タイムラインID[${timelineID}]は登録されていません`);
             // 登録されていないタイムラインIDが指定されていたらタイトルシーンに遷移する
             this.scene.start("StartScene");
             return;
@@ -35,7 +33,7 @@ export default class ChapterPlayScene extends Phaser.Scene {
             return;
         }
 
-        const { width, height } = this.game.canvas;
+        const { width } = this.game.canvas;
 
         const textStyle: Phaser.Types.GameObjects.Text.TextStyle = {
             fontFamily:
