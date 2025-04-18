@@ -60,8 +60,23 @@ export default class LoadingScene extends Phaser.Scene {
     }
 
     create() {
-        // 描画領域のサイズを取得
-        // const { width, height } = this.game.canvas;
+        // ゲームキャンバスの幅と高さを取得
+        const { width, height } = this.cameras.main;
+
+        // 中央に "Loading..." テキストを表示
+        const loadingText = this.add.text(width / 2, height / 2, "Loading...", {
+            fontSize: "32px",
+            color: "#ffffff",
+        }).setOrigin(0.5);
+
+        // 点滅アニメーション（透明度を変える）
+        this.tweens.add({
+            targets: loadingText,
+            alpha: { from: 1, to: 0.3 },
+            duration: 800,
+            yoyo: true,
+            repeat: -1,
+        });
 
         // アセットのロードが完了したらTitleSceneに遷移
         this.load.on("complete", () => {
